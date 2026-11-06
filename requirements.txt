@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+pydantic
+pydantic-settings
+sqlalchemy
+pytest
+httpx
+allure-pytest
+bcrypt
+psycopg[binary]
