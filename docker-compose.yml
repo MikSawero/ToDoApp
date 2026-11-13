@@ -1,21 +1,36 @@
 services:
-  web:
+  db:
+    image: postgres:15-alpine
+    container_name: todo_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: todo_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
     build: .
+    container_name: todo_backend
+    restart: always
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=postgresql://user:password@db:5432/todo_db
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/todo_db
+      - JWT_SECRET_KEY=502da66bdaf6dae1d8a0b9e43ff737cecd0ff166b6fa497aab2f2acef3bac7a7
     depends_on:
       - db
 
-  db:
-    image: postgres:15-alpine
-    environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=todo_db
-    volumes:
-      - pgdata:/var/lib/postgresql/data
+  frontend:
+    build: ./frontend
+    container_name: todo_frontend
+    restart: always
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
 
 volumes:
-  pgdata:
+  postgres_data:

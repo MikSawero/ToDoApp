@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">ToDoApp - Rejestracja</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 340px; position: relative; }
+        .lang-switch { position: absolute; top: 15px; right: 15px; }
+        .lang-btn { background: none; border: 1px solid #ccc; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
+        .lang-btn.active { background-color: #007bff; color: white; border-color: #007bff; }
+        .card h2 { margin-top: 1rem; margin-bottom: 1.5rem; text-align: center; color: #333; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: .5rem; color: #666; font-size: 0.9rem; }
+        .form-group input { width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button[type="submit"] { width: 100%; padding: 0.75rem; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem; margin-top: 0.5rem; }
+        button[type="submit"]:hover { background-color: #0056b3; }
+        .switch-form-btn { background: none; border: none; color: #007bff; cursor: pointer; width: 100%; text-align: center; margin-top: 1rem; font-size: 0.9rem; text-decoration: none; display: block; }
+        .switch-form-btn:hover { text-decoration: underline; }
+        .message { margin-top: 1rem; text-align: center; font-size: 0.9rem; font-weight: bold; }
+        .error { color: #dc3545; }
+        .success { color: #28a745; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <div class="lang-switch">
+            <button id="lang-pl" data-testid="lang-switch-pl" class="lang-btn active" onclick="setLanguage('pl')">PL</button>
+            <button id="lang-en" data-testid="lang-switch-en" class="lang-btn" onclick="setLanguage('en')">EN</button>
+        </div>
+
+        <div id="register-container">
+            <h2 id="register-header">Rejestracja w ToDoApp</h2>
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="reg-username" id="label-reg-username">Nazwa użytkownika (Login)</label>
+                    <input type="text" id="reg-username" data-testid="reg-username-input" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-email" id="label-reg-email">Adres e-mail</label>
+                    <input type="email" id="reg-email" data-testid="reg-email-input" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-password" id="label-reg-password">Hasło</label>
+                    <input type="password" id="reg-password" data-testid="reg-password-input" name="password" required>
+                </div>
+                <button type="submit" id="register-btn" data-testid="register-submit-btn">Zarejestruj się</button>
+            </form>
+            <a href="login.html" id="switch-to-login-btn" data-testid="switch-to-login-btn" class="switch-form-btn">Masz już konto? Zaloguj się</a>
+            <div id="register-message" data-testid="reg-message-banner" class="message"></div>
+        </div>
+    </div>
+
+<script>
+    const translations = {
+        pl: {
+            registerTitle: "ToDoApp - Rejestracja",
+            registerHeader: "Rejestracja w ToDoApp",
+            usernameLabel: "Nazwa użytkownika (Login)",
+            emailLabel: "Adres e-mail",
+            passwordLabel: "Hasło",
+            registerBtn: "Zarejestruj się",
+            switchToLog: "Masz już konto? Zaloguj się",
+            regSuccess: "Rejestracja udana! Możesz się zalogować.",
+            regError: "Rejestracja nie powiodła się.",
+            usernameTaken: "Ta nazwa użytkownika jest już zajęta.",
+            emailTaken: "Ten adres e-mail jest już zarejestrowany.",
+            connectionError: "Nie można połączyć się z serwerem. Sprawdź, czy aplikacja działa."
+        },
+        en: {
+            registerTitle: "ToDoApp - Register",
+            registerHeader: "Register in ToDoApp",
+            usernameLabel: "Username",
+            emailLabel: "Email address",
+            passwordLabel: "Password",
+            registerBtn: "Register",
+            switchToLog: "Already have an account? Log In",
+            regSuccess: "Registration successful! You can now log in.",
+            regError: "Registration failed.",
+            usernameTaken: "That username is already taken.",
+            emailTaken: "That email address is already registered.",
+            connectionError: "Could not connect to the server. Check that the app is running."
+        }
+    };
+
+    let currentLang = 'pl';
+
+    function setLanguage(lang) {
+        currentLang = lang;
+        document.getElementById('lang-pl').classList.toggle('active', lang === 'pl');
+        document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+        
+        const t = translations[lang];
+        document.getElementById('page-title').innerText = t.registerTitle;
+        document.getElementById('register-header').innerText = t.registerHeader;
+        document.getElementById('label-reg-username').innerText = t.usernameLabel;
+        document.getElementById('label-reg-email').innerText = t.emailLabel;
+        document.getElementById('label-reg-password').innerText = t.passwordLabel;
+        document.getElementById('register-btn').innerText = t.registerBtn;
+        document.getElementById('switch-to-login-btn').innerText = t.switchToLog;
+    }
+
+    document.getElementById('register-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const username = document.getElementById('reg-username').value;
+        const email = document.getElementById('reg-email').value;
+        const password = document.getElementById('reg-password').value;
+        const messageDiv = document.getElementById('register-message');
+
+        try {
+            const response = await fetch('http://localhost:8000/api/v1/users/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: username, email: email, password: password })
+            });
+
+            const data = await response.json().catch(() => null);
+            if (!response.ok) {
+                const detail = data?.detail;
+                if (detail === "Username already taken") {
+                    throw new Error(translations[currentLang].usernameTaken);
+                }
+                if (detail === "Email already registered") {
+                    throw new Error(translations[currentLang].emailTaken);
+                }
+                const validationErrors = Array.isArray(detail)
+                    ? detail.map(error => error.msg).join(", ")
+                    : detail;
+                throw new Error(validationErrors || `${translations[currentLang].regError} (HTTP ${response.status})`);
+            }
+
+            if (!data) {
+                throw new Error(`${translations[currentLang].regError} (invalid server response)`);
+            }
+
+            messageDiv.textContent = translations[currentLang].regSuccess;
+            messageDiv.className = "message success";
+            
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 2000);
+        } catch (error) {
+            messageDiv.textContent = error instanceof TypeError
+                ? translations[currentLang].connectionError
+                : error.message || translations[currentLang].regError;
+            messageDiv.className = "message error";
+        }
+    });
+</script>
+
+</body>
+</html>

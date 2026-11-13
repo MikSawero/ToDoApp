@@ -1,6 +1,6 @@
 venv/
 .env
-ToDoApp-Computer.pem
+*.pem
 __pycache__/
 .pytest_cache/
 tests

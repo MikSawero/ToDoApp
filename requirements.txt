@@ -8,3 +8,5 @@ httpx
 allure-pytest
 bcrypt
 psycopg[binary]
+PyJWT
+python-multipart

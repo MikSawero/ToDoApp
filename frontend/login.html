@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">ToDoApp - Logowanie</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 340px; position: relative; }
+        .lang-switch { position: absolute; top: 15px; right: 15px; }
+        .lang-btn { background: none; border: 1px solid #ccc; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
+        .lang-btn.active { background-color: #007bff; color: white; border-color: #007bff; }
+        .card h2 { margin-top: 1rem; margin-bottom: 1.5rem; text-align: center; color: #333; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: .5rem; color: #666; font-size: 0.9rem; }
+        .form-group input { width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button[type="submit"] { width: 100%; padding: 0.75rem; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem; margin-top: 0.5rem; }
+        button[type="submit"]:hover { background-color: #0056b3; }
+        .switch-form-btn { background: none; border: none; color: #007bff; cursor: pointer; width: 100%; text-align: center; margin-top: 1rem; font-size: 0.9rem; text-decoration: none; display: block; }
+        .switch-form-btn:hover { text-decoration: underline; }
+        .message { margin-top: 1rem; text-align: center; font-size: 0.9rem; font-weight: bold; }
+        .error { color: #dc3545; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <div class="lang-switch">
+            <button id="lang-pl" data-testid="lang-switch-pl" class="lang-btn active" onclick="setLanguage('pl')">PL</button>
+            <button id="lang-en" data-testid="lang-switch-en" class="lang-btn" onclick="setLanguage('en')">EN</button>
+        </div>
+
+        <div id="login-container">
+            <h2 id="login-header">Logowanie do ToDoApp</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-username" id="label-login-username">Nazwa użytkownika (Login)</label>
+                    <input type="text" id="login-username" data-testid="username-input" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password" id="label-login-password">Hasło</label>
+                    <input type="password" id="login-password" data-testid="password-input" name="password" required>
+                </div>
+                <button type="submit" id="login-btn" data-testid="login-submit-btn">Zaloguj się</button>
+            </form>
+            <a href="register.html" id="switch-to-register-btn" data-testid="switch-to-register-btn" class="switch-form-btn">Nie masz konta? Zarejestruj się</a>
+            <div id="login-message" data-testid="auth-message-banner" class="message"></div>
+        </div>
+    </div>
+
+<script>
+    const translations = {
+        pl: {
+            loginTitle: "ToDoApp - Logowanie",
+            loginHeader: "Logowanie do ToDoApp",
+            usernameLabel: "Nazwa użytkownika (Login)",
+            passwordLabel: "Hasło",
+            loginBtn: "Zaloguj się",
+            switchToReg: "Nie masz konta? Zarejestruj się",
+            loginError: "Błąd logowania! Sprawdź dane."
+        },
+        en: {
+            loginTitle: "ToDoApp - Login",
+            loginHeader: "Login to ToDoApp",
+            usernameLabel: "Username",
+            passwordLabel: "Password",
+            loginBtn: "Log In",
+            switchToReg: "Don't have an account? Register",
+            loginError: "Login failed! Check your credentials."
+        }
+    };
+
+    let currentLang = 'pl';
+
+    function setLanguage(lang) {
+        currentLang = lang;
+        document.getElementById('lang-pl').classList.toggle('active', lang === 'pl');
+        document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+        
+        const t = translations[lang];
+        document.getElementById('page-title').innerText = t.loginTitle;
+        document.getElementById('login-header').innerText = t.loginHeader;
+        document.getElementById('label-login-username').innerText = t.usernameLabel;
+        document.getElementById('label-login-password').innerText = t.passwordLabel;
+        document.getElementById('login-btn').innerText = t.loginBtn;
+        document.getElementById('switch-to-register-btn').innerText = t.switchToReg;
+    }
+
+    document.getElementById('login-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const username = document.getElementById('login-username').value;
+        const password = document.getElementById('login-password').value;
+        const messageDiv = document.getElementById('login-message');
+
+        const formData = new URLSearchParams();
+        formData.append('username', username);
+        formData.append('password', password);
+
+        const response = await fetch('http://localhost:8000/api/v1/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: formData
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            
+            if (data.access_token) {
+                localStorage.setItem('access_token', data.access_token);
+                window.location.href = 'dashboard.html';
+            } else {
+                console.error("JSON structure error:", data);
+            }
+        } else {
+            console.error("Error HTTP:", response.status);
+        }
+    });
+</script>
+
+</body>
+</html>

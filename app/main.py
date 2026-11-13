@@ -1,19 +1,29 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import RedirectResponse
+
 from app.api.v1.api import api_router
 from app.db.session import Base, engine
 
 import app.models
 
-app = FastAPI(
-    title="Modular FastAPI App",
-    version="1.0.0",
-    docs_url="/docs",
-    redoc_url="/redoc"
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], 
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
-Base.metadata.create_all(bind=engine)
 
 app.include_router(api_router, prefix="/api/v1")
 
+app.mount("/static", StaticFiles(directory="frontend"), name="static")
+
+Base.metadata.create_all(bind=engine)
+
 @app.get("/")
 def root():
-    return {"message": "Welcome"}
+    return RedirectResponse(url="/static/login.html")
