@@ -12,3 +12,4 @@ class Folder(Base):
     owner = relationship("User", back_populates="folders")
     tasks = relationship("Task", back_populates="folder", cascade="all, delete-orphan")
     notes = relationship("Note", back_populates="folder", cascade="all, delete-orphan")
+    events = relationship("Event", back_populates="folder", cascade="all, delete-orphan")

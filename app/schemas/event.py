@@ -1,26 +1,28 @@
-from datetime import datetime
 from typing import Optional
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel
 
 class EventBase(BaseModel):
     title: str
+    date: str
+    time: Optional[str] = "12:00"
+    category: Optional[str] = "meeting"
     description: Optional[str] = None
-    start_time: datetime
-    end_time: datetime
-    is_all_day: bool = False
+    folder_id: Optional[int] = None
 
 class EventCreate(EventBase):
     pass
 
 class EventUpdate(BaseModel):
     title: Optional[str] = None
+    date: Optional[str] = None
+    time: Optional[str] = None
+    category: Optional[str] = None
     description: Optional[str] = None
-    start_time: Optional[datetime] = None
-    end_time: Optional[datetime] = None
-    is_all_day: Optional[bool] = None
+    folder_id: Optional[int] = None
 
 class EventResponse(EventBase):
     id: int
     user_id: int
 
-    model_config = ConfigDict(from_attributes=True)
+    class Config:
+        from_attributes = True

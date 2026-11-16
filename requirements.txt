@@ -4,9 +4,12 @@ pydantic
 pydantic-settings
 sqlalchemy
 pytest
+pytest-playwright
 httpx
 allure-pytest
 bcrypt
 psycopg[binary]
 PyJWT
 python-multipart
+playwright
+pytest-playwright

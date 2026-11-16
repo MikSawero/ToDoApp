@@ -2,65 +2,43 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title data-i18n="title">Kalendarz - ToDoApp</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: Arial, sans-serif; background-color: #f4f6f8; color: #333; padding: 20px; }
-        
-        .app-container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; height: 90vh; }
-        
-        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background: #2c3e50; color: white; border-bottom: 1px solid #ddd; }
-        header h1 { font-size: 1.2rem; }
-        .user-panel { display: flex; align-items: center; gap: 15px; }
-        .btn-danger { background-color: #e74c3c; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; }
-        .btn-danger:hover { background-color: #c0392b; }
-
-        .main-layout { display: flex; flex: 1; overflow: hidden; }
-        
-        .calendar-section { flex: 2; padding: 20px; border-right: 1px solid #eee; display: flex; flex-direction: column; overflow-y: auto; }
-        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; flex: 1; }
-        .calendar-day-name { text-align: center; font-weight: bold; color: #7f8c8d; font-size: 0.9rem; padding-bottom: 5px; }
-        
-        .calendar-cell { 
-            background: #fdfdfd; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px; 
-            min-height: 80px; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;
-            transition: all 0.2s ease;
-        }
-        .calendar-cell:hover { background: #ebf8ff; border-color: #3182ce; }
-        .calendar-cell .day-number { font-weight: bold; font-size: 0.9rem; color: #2d3748; }
-        .calendar-cell.empty { background: #f7fafc; opacity: 0.4; cursor: default; }
-        .calendar-cell.empty:hover { background: #f7fafc; border-color: #e2e8f0; }
-
-        .info-section { flex: 1; padding: 20px; background: #f8fafc; overflow-y: auto; }
-        .info-section h3 { margin-bottom: 15px; color: #2d3748; font-size: 1.1rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; }
-        
-        .event-card { background: white; padding: 12px; border-radius: 6px; margin-bottom: 10px; border-left: 4px solid #3182ce; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .event-date { font-size: 0.8rem; color: #718096; margin-bottom: 4px; }
-        .event-title { font-weight: bold; font-size: 0.950rem; color: #2d3748; }
-    </style>
+    <title>ToDoApp - Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
 </head>
 <body>
 
 <div class="app-container">
     <header>
-        <h1 data-testid="app-title">ToDoApp & Kalendarz</h1>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <h1 data-testid="app-title" data-i18n="app_title">ToDoApp & Planer</h1>
+            <nav class="nav-tabs" data-testid="main-nav">
+                <a href="dashboard.html" class="nav-tab active" data-testid="dashboard-nav" data-i18n="calendar_tab">Kalendarz</a>
+                <a href="projects.html" class="nav-tab" data-testid="my-projects-nav" data-i18n="my_projects">Moje Projekty</a>
+            </nav>
+            <select id="project-filter" data-testid="project-filter" style="padding: 6px 10px; border-radius: 4px; border: none; font-weight: bold; cursor: pointer;">
+                <option value="all" data-i18n="all_events">Wszystkie wydarzenia</option>
+                <option value="personal" data-i18n="personal_only">Tylko osobiste (Bez projektu)</option>
+            </select>
+            <button id="new-project-btn" data-testid="new-project-btn" class="btn-settings" style="background: #27ae60;" data-i18n="new_project">+ Nowy Projekt</button>
+        </div>
         <div class="user-panel">
-            <span id="logged-user" data-testid="logged-user-label">Witaj, Użytkowniku</span>
-            <button id="settings-btn" data-testid="settings-btn" style="background: #34495e; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer;">Ustawienia</button>
-            <button id="logout-btn" data-testid="logout-btn" class="btn-danger">Wyloguj</button>
+            <span id="logged-user" data-testid="logged-user-label" data-i18n="logged_in">Zalogowany</span>
+            <select id="lang-switcher" data-testid="lang-switcher" class="btn-settings" style="cursor: pointer;">
+                <option value="pl">🇵🇱 PL</option>
+                <option value="en">🇬🇧 EN</option>
+            </select>
+            <button id="settings-btn" data-testid="settings-btn" class="btn-settings" data-i18n="settings">Ustawienia</button>
+            <button id="logout-btn" data-testid="logout-btn" class="btn-danger" data-i18n="logout">Wyloguj</button>
         </div>
     </header>
 
     <div class="main-layout">
-        
         <div class="calendar-section">
             <div class="calendar-header">
                 <h2 id="month-year-title">Listopad 2026</h2>
                 <div>
-                    <button id="prev-month" style="padding: 5px 10px; cursor: pointer;">&lt; Poprzedni</button>
-                    <button id="next-month" style="padding: 5px 10px; cursor: pointer;">Następny &gt;</button>
+                    <button id="prev-month" data-testid="prev-month-btn" class="nav-btn" data-i18n="prev_month">&lt; Poprzedni</button>
+                    <button id="next-month" data-testid="next-month-btn" class="nav-btn" data-i18n="next_month">Następny &gt;</button>
                 </div>
             </div>
 
@@ -72,27 +50,72 @@
                 <div class="calendar-day-name">Pt</div>
                 <div class="calendar-day-name">Sob</div>
                 <div class="calendar-day-name">Nied</div>
-
             </div>
         </div>
 
         <div class="info-section" data-testid="info-sidebar">
-            <h3>Nadchodzące Wydarzenia</h3>
-            <div id="upcoming-events-list">
-                <div class="event-card" data-testid="event-card">
-                    <div class="event-date">15 Listopada 2026</div>
-                    <div class="event-title">Spotkanie zespołu projektowego</div>
-                </div>
-                <div class="event-card" data-testid="event-card">
-                    <div class="event-date">18 Listopada 2026</div>
-                    <div class="event-title">Testy E2E (Selenium)</div>
-                </div>
-            </div>
+            <h3 data-i18n="upcoming_events">Nadchodzące Wydarzenia</h3>
+            <div id="upcoming-events-list"></div>
         </div>
-
     </div>
 </div>
 
+<div class="modal-overlay" id="event-modal" data-testid="event-modal">
+    <div class="modal-box">
+        <h3 id="modal-date-title" data-i18n="add_event_title">Dodaj wydarzenie</h3>
+        <form id="event-form">
+            <input type="hidden" id="event-date-input">
+            <div class="form-group">
+                <label for="event-project-input" data-i18n="project_label">Projekt (opcjonalnie)</label>
+                <select id="event-project-input" data-testid="event-project-select">
+                    <option value="" data-i18n="no_project_opt">Brak projektu (Wydarzenie osobiste)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="event-title-input" data-i18n="event_name_label">Nazwa wydarzenia</label>
+                <input type="text" id="event-title-input" data-testid="event-title-input" data-i18n-placeholder="event_title_ph" required>
+            </div>
+            <div class="form-group">
+                <label for="event-time-input" data-i18n="event_time_label">Godzina</label>
+                <input type="time" id="event-time-input" data-testid="event-time-input" value="12:00" required>
+            </div>
+            <div class="form-group">
+                <label for="event-category-input" data-i18n="event_cat_label">Typ wydarzenia</label>
+                <select id="event-category-input" data-testid="event-category-select">
+                    <option value="meeting" data-i18n="cat_meeting">Spotkanie (Niebieski)</option>
+                    <option value="deadline" data-i18n="cat_deadline">Deadline / Ważne (Czerwony)</option>
+                    <option value="other" data-i18n="cat_other">Inne / Zadanie (Zielony)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="event-desc-input" data-i18n="event_desc_label">Opis / Dodatkowe informacje</label>
+                <textarea id="event-desc-input" data-testid="event-desc-input" rows="3" data-i18n-placeholder="event_desc_ph"></textarea>
+            </div>
+            <div class="modal-actions">
+                <button type="button" id="close-modal-btn" data-testid="cancel-event-btn" class="btn-secondary" data-i18n="cancel_btn">Anuluj</button>
+                <button type="submit" id="save-event-btn" data-testid="save-event-btn" class="btn-primary" data-i18n="save_event_btn">Zapisz datę</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal-overlay" id="project-modal" data-testid="project-modal">
+    <div class="modal-box">
+        <h3 data-i18n="create_project_title">Utwórz nowy projekt</h3>
+        <form id="project-form">
+            <div class="form-group">
+                <label for="project-name-input" data-i18n="project_name_label">Nazwa projektu</label>
+                <input type="text" id="project-name-input" data-testid="project-name-input" data-i18n-placeholder="project_name_ph" required>
+            </div>
+            <div class="modal-actions">
+                <button type="button" id="close-project-modal-btn" class="btn-secondary" data-i18n="cancel_btn">Anuluj</button>
+                <button type="submit" id="save-project-btn" data-testid="save-project-btn" class="btn-primary" data-i18n="create_project_btn">Utwórz projekt</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="i18n.js"></script>
 <script src="dashboard.js"></script>
 </body>
 </html>

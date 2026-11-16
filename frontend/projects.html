@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>ToDoApp - Moje Projekty</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+<div class="app-container">
+    <header>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <h1 data-testid="app-title" data-i18n="app_title">ToDoApp & Planer</h1>
+            <nav class="nav-tabs" data-testid="main-nav">
+                <a href="dashboard.html" class="nav-tab" data-testid="dashboard-nav" data-i18n="calendar_tab">Kalendarz</a>
+                <a href="projects.html" class="nav-tab active" data-testid="my-projects-nav" data-i18n="my_projects">Moje Projekty</a>
+            </nav>
+        </div>
+        <div class="user-panel">
+            <span id="logged-user" data-testid="logged-user-label" data-i18n="logged_in">Zalogowany</span>
+            <select id="lang-switcher" data-testid="lang-switcher" class="btn-settings" style="cursor: pointer;">
+                <option value="pl">🇵🇱 PL</option>
+                <option value="en">🇬🇧 EN</option>
+            </select>
+            <button id="settings-btn" data-testid="settings-btn" class="btn-settings" data-i18n="settings">Ustawienia</button>
+            <button id="logout-btn" data-testid="logout-btn" class="btn-danger" data-i18n="logout">Wyloguj</button>
+        </div>
+    </header>
+
+    <div class="projects-section">
+        <div class="projects-header">
+            <h2 data-testid="projects-heading" data-i18n="my_projects_title">Moje Projekty (Foldery)</h2>
+            <button id="new-project-btn" data-testid="new-project-btn" class="btn-settings" style="background: #27ae60; font-weight: bold;" data-i18n="new_project">+ Nowy Projekt</button>
+        </div>
+
+        <div id="projects-grid" data-testid="projects-grid" class="projects-grid"></div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="project-modal" data-testid="project-modal">
+    <div class="modal-box">
+        <h3 data-i18n="create_project_title">Utwórz nowy projekt</h3>
+        <form id="project-form">
+            <div class="form-group">
+                <label for="project-name-input" data-i18n="project_name_label">Nazwa projektu</label>
+                <input type="text" id="project-name-input" data-testid="project-name-input" data-i18n-placeholder="project_name_ph" required>
+            </div>
+            <div class="modal-actions">
+                <button type="button" id="close-project-modal-btn" data-testid="cancel-project-btn" class="btn-secondary" data-i18n="cancel_btn">Anuluj</button>
+                <button type="submit" id="save-project-btn" data-testid="save-project-btn" class="btn-primary" data-i18n="create_project_btn">Utwórz projekt</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="i18n.js"></script>
+<script src="projects.js"></script>
+</body>
+</html>
