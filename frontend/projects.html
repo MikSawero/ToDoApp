@@ -2,6 +2,7 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ToDoApp - Moje Projekty</title>
     <link rel="stylesheet" href="dashboard.css">
 </head>
@@ -9,7 +10,7 @@
 
 <div class="app-container">
     <header>
-        <div style="display: flex; align-items: center; gap: 15px;">
+        <div class="header-left">
             <h1 data-testid="app-title" data-i18n="app_title">ToDoApp & Planer</h1>
             <nav class="nav-tabs" data-testid="main-nav">
                 <a href="dashboard.html" class="nav-tab" data-testid="dashboard-nav" data-i18n="calendar_tab">Kalendarz</a>
@@ -34,6 +35,14 @@
         </div>
 
         <div id="projects-grid" data-testid="projects-grid" class="projects-grid"></div>
+
+        <div id="project-events-panel" data-testid="project-events-panel" class="project-events-panel" style="display: none;">
+            <div class="project-events-header">
+                <h3 id="selected-project-title" data-testid="selected-project-title">📁 Wydarzenia w projekcie</h3>
+                <button type="button" id="add-project-event-btn" data-testid="add-project-event-btn" class="btn-primary" style="font-weight: bold;" data-i18n="add_event_to_project">+ Dodaj wydarzenie</button>
+            </div>
+            <div id="project-events-list" data-testid="project-events-list" class="project-events-grid"></div>
+        </div>
     </div>
 </div>
 
@@ -48,6 +57,100 @@
             <div class="modal-actions">
                 <button type="button" id="close-project-modal-btn" data-testid="cancel-project-btn" class="btn-secondary" data-i18n="cancel_btn">Anuluj</button>
                 <button type="submit" id="save-project-btn" data-testid="save-project-btn" class="btn-primary" data-i18n="create_project_btn">Utwórz projekt</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal-overlay" id="event-modal" data-testid="event-modal">
+    <div class="modal-box">
+        <h3 id="modal-date-title" data-i18n="add_event_title">Dodaj wydarzenie</h3>
+        <form id="event-form">
+            <div class="form-group">
+                <label for="event-date-input" data-i18n="event_date_label">Data wydarzenia</label>
+                <input type="date" id="event-date-input" data-testid="event-date-input" required>
+            </div>
+            <div class="form-group">
+                <label for="event-project-input" data-i18n="project_label">Projekt</label>
+                <select id="event-project-input" data-testid="event-project-select" required>
+                    <option value="other" data-i18n="other_folder">Inne</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="event-title-input" data-i18n="event_name_label">Nazwa wydarzenia</label>
+                <input type="text" id="event-title-input" data-testid="event-title-input" data-i18n-placeholder="event_title_ph" maxlength="50" required>
+            </div>
+            <div class="form-group">
+                <label class="checkbox-label" style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                    <input type="checkbox" id="event-all-day-input" data-testid="event-all-day-checkbox" style="width: auto;">
+                    <span data-i18n="all_day_checkbox_label">Wydarzenie całodniowe</span>
+                </label>
+            </div>
+            <div class="form-row-two" id="event-times-row">
+                <div class="form-group">
+                    <label for="event-time-input" data-i18n="event_time_label">Od godziny</label>
+                    <input type="time" id="event-time-input" data-testid="event-time-input" value="12:00" required>
+                </div>
+                <div class="form-group">
+                    <label for="event-end-time-input" data-i18n="event_end_time_label">Do godziny</label>
+                    <input type="time" id="event-end-time-input" data-testid="event-end-time-input" value="13:00" required>
+                </div>
+            </div>
+            <div id="event-time-error" data-testid="event-time-error" style="color: #e53e3e; font-size: 0.82rem; margin-bottom: 10px; display: none;"></div>
+            <div class="form-group">
+                <label for="event-category-input" data-i18n="event_cat_label">Typ wydarzenia</label>
+                <select id="event-category-input" data-testid="event-category-select">
+                    <option value="meeting" data-i18n="cat_meeting">Spotkanie</option>
+                    <option value="deadline" data-i18n="cat_deadline">Deadline / Ważne</option>
+                    <option value="other" data-i18n="cat_other">Inne / Zadanie</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="event-desc-input" data-i18n="event_desc_label">Opis / Dodatkowe informacje</label>
+                <textarea id="event-desc-input" data-testid="event-desc-input" rows="3" maxlength="300" data-i18n-placeholder="event_desc_ph"></textarea>
+            </div>
+            <div class="modal-actions">
+                <button type="button" id="close-modal-btn" data-testid="cancel-event-btn" class="btn-secondary" data-i18n="cancel_btn">Anuluj</button>
+                <button type="submit" id="save-event-btn" data-testid="save-event-btn" class="btn-primary" data-i18n="save_event_btn">Zapisz datę</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal-overlay" id="settings-modal" data-testid="settings-modal">
+    <div class="modal-box">
+        <h3 data-i18n="settings_title">Ustawienia aplikacji</h3>
+        <form id="settings-form">
+            <div class="form-group">
+                <label for="settings-theme-select" data-i18n="theme_label">Motyw kolorystyczny</label>
+                <select id="settings-theme-select" data-testid="settings-theme-select">
+                    <option value="light" data-i18n="theme_light">☀️ Jasny</option>
+                    <option value="dark" data-i18n="theme_dark">🌙 Ciemny</option>
+                    <option value="midnight" data-i18n="theme_midnight">🌌 Granatowy (Midnight)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="settings-lang-select" data-i18n="language_label">Język</label>
+                <select id="settings-lang-select" data-testid="settings-lang-select">
+                    <option value="pl">🇵🇱 Polski (PL)</option>
+                    <option value="en">🇬🇧 English (EN)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="settings-autodelete-select" data-i18n="autodelete_label">Automatyczne usuwanie starych wydarzeń</label>
+                <select id="settings-autodelete-select" data-testid="settings-autodelete-select">
+                    <option value="never" data-i18n="autodelete_never">Nigdy (Wyłączone)</option>
+                    <option value="0" data-i18n="autodelete_0">Starsze niż dzisiaj (&gt; 0 dni temu)</option>
+                    <option value="1" data-i18n="autodelete_1">Starsze niż 1 dzień (&gt; 1 dzień temu)</option>
+                    <option value="3" data-i18n="autodelete_3">Starsze niż 3 dni (&gt; 3 dni temu)</option>
+                    <option value="7" data-i18n="autodelete_7">Starsze niż 7 dni (&gt; 7 dni temu)</option>
+                    <option value="30" data-i18n="autodelete_30">Starsze niż 30 dni (&gt; 30 dni temu)</option>
+                    <option value="90" data-i18n="autodelete_90">Starsze niż 90 dni (&gt; 90 dni temu)</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button type="button" id="close-settings-modal-btn" data-testid="cancel-settings-btn" class="btn-secondary" data-i18n="cancel_btn">Anuluj</button>
+                <button type="submit" id="save-settings-btn" data-testid="save-settings-btn" class="btn-primary" data-i18n="save_settings_btn">Zapisz ustawienia</button>
             </div>
         </form>
     </div>

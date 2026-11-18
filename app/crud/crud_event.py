@@ -12,7 +12,9 @@ def create_user_event(db: Session, event_in: EventCreate, user_id: int):
     db_event = Event(
         title=event_in.title,
         date=event_in.date,
-        time=event_in.time,
+        time=None if event_in.is_all_day else event_in.time,
+        end_time=None if event_in.is_all_day else event_in.end_time,
+        is_all_day=bool(event_in.is_all_day),
         category=event_in.category,
         description=event_in.description,
         folder_id=event_in.folder_id,

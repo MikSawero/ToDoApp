@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
 from app.db.session import Base
 
@@ -9,6 +9,8 @@ class Event(Base):
     title = Column(String, nullable=False)
     date = Column(String, nullable=False, index=True)
     time = Column(String, nullable=True)
+    end_time = Column(String, nullable=True)
+    is_all_day = Column(Boolean, default=False)
     category = Column(String, default="meeting")
     description = Column(String, nullable=True)
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
