@@ -257,7 +257,6 @@ header h1 { font-size: 1.25rem; white-space: nowrap; }
     gap: 14px;
 }
 
-/* Responsywność dla tabletów i telefonów */
 @media (max-width: 960px) {
     .app-container {
         height: auto;
@@ -315,7 +314,6 @@ header h1 { font-size: 1.25rem; white-space: nowrap; }
     }
 }
 
-/* Motyw Ciemny (Dark) oraz Granatowy (Midnight) */
 [data-theme="dark"] body,
 body[data-theme="dark"],
 [data-theme="dark"] .app-container {

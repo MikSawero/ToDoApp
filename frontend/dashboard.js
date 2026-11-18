@@ -376,7 +376,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const prevScroll = weekBody.scrollTop;
         weekBody.innerHTML = '';
 
-        // Wiersz na wydarzenia całodniowe na górze widoku tygodnia
         const allDayRow = document.createElement('div');
         allDayRow.className = 'week-hour-row all-day-row';
         const allDayLabel = document.createElement('div');
